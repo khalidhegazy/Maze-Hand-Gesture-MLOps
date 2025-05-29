@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/255208381890099264/a601e175120041e3bdd09d405e9e7784/artifacts
+end_time: 1748333097396
+entry_point_name: ''
+experiment_id: '255208381890099264'
+lifecycle_stage: active
+run_id: a601e175120041e3bdd09d405e9e7784
+run_name: Best_SVC_Model_Run
+run_uuid: a601e175120041e3bdd09d405e9e7784
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748332943430
+status: 3
+tags: []
+user_id: smc

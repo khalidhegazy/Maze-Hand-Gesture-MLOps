@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+numpy
+scikit-learn
+joblib
+prometheus_client
+prometheus-fastapi-instrumentator
+pydantic

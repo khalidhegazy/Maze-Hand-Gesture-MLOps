@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/255208381890099264
+creation_time: 1748285226304
+experiment_id: '255208381890099264'
+last_update_time: 1748285226304
+lifecycle_stage: active
+name: HandGesture_Best_SVC_Training
