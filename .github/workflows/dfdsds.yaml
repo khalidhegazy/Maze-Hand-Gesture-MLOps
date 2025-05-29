@@ -1,0 +1,80 @@
+
+# ────────────────────────────────────────────────────────
+# CI + CD: Test → Build → Push to Docker Hub → Deploy to Railway
+# ────────────────────────────────────────────────────────
+name: CI-CD | Build & Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_USERNAME }}/hand-gesture-api
+  RAILWAY_PROJECT: ${{ vars.RAILWAY_PROJECT_ID }}
+  RAILWAY_SERVICE: ${{ vars.RAILWAY_SERVICE_NAME }}
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+    env:
+      DRY_RUN: ${{ vars.DRY_RUN != '' && vars.DRY_RUN || 'true' }}
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    # 1. Checkout repository
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. Setup Python and install dependencies
+    - name: Set up Python & Install dependencies
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install dependencies & run tests
+      run: |
+        python -m pip install --quiet --upgrade pip
+        pip install -q -r requirements.txt
+        # Uncomment to run tests if you have any in tests/ folder
+        # python -m pytest tests/
+
+    # 3. Login to Docker Hub
+    - name: Docker Hub – Login
+      run: |
+        echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+    # 4. Build Docker image and push to Docker Hub
+    - name: Build & Push Docker Image
+      env:
+        TAG: ${{ github.sha }}
+      run: |
+        docker build \
+          -t $DOCKERHUB_REPO:$TAG \
+          -t $DOCKERHUB_REPO:latest \
+          .
+
+        docker push $DOCKERHUB_REPO:$TAG
+        docker push $DOCKERHUB_REPO:latest
+
+        echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
+
+    # 5. Install Railway CLI (only if not dry run)
+    - name: Install Railway CLI
+      if: env.DRY_RUN == 'false'
+      run: npm install -g @railway/cli
+
+    # 6. Deploy to Railway (only if not dry run)
+    - name: Deploy to Railway
+      if: env.DRY_RUN == 'false'
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      run: |
+        echo "Using Railway project $RAILWAY_PROJECT and service $RAILWAY_SERVICE"
+        railway use --project $RAILWAY_PROJECT --service $RAILWAY_SERVICE
+        railway deploy --image $DOCKERHUB_REPO:${{ env.IMAGE_TAG }}
