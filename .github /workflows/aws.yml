@@ -8,21 +8,19 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 env:
-  # Docker image repository on Docker Hub (username injected from secrets)
   DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_USERNAME }}/hand-gesture-api
-
-  # Railway deployment variables (configured in GitHub repo variables)
   RAILWAY_PROJECT: ${{ vars.RAILWAY_PROJECT_ID }}
   RAILWAY_SERVICE: ${{ vars.RAILWAY_SERVICE_NAME }}
-
-  # Toggle deployment: true = build + push only; false = full deploy to Railway
-  DRY_RUN: ${{ vars.DRY_RUN || 'true' }}
 
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
+    env:
+      DRY_RUN: ${{ vars.DRY_RUN != '' && vars.DRY_RUN || 'true' }}
+
     permissions:
       contents: read
       id-token: write
@@ -50,7 +48,7 @@ jobs:
       run: |
         echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-    # 4. Build Docker image and push tags
+    # 4. Build Docker image and push to Docker Hub
     - name: Build & Push Docker Image
       env:
         TAG: ${{ github.sha }}
@@ -58,7 +56,7 @@ jobs:
         docker build \
           -t $DOCKERHUB_REPO:$TAG \
           -t $DOCKERHUB_REPO:latest \
-          ./app
+          .
 
         docker push $DOCKERHUB_REPO:$TAG
         docker push $DOCKERHUB_REPO:latest
