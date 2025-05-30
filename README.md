@@ -116,45 +116,6 @@ Deployment
 
 
 
-Deployment Instructions
-Build Docker Image
-
-bash
-Copy
-Edit
-docker build -t maze-backend .
-Run Container
-
-bash
-Copy
-Edit
-docker run -p 8000:8000 maze-backend
-Access API
-
-Swagger docs: http://localhost:8000/docs
-
-Health check: http://localhost:8000/health
-
-Monitoring (Grafana + Prometheus)
-Metrics such as:
-
-Request count
-
-Latency per endpoint
-
-Model inference time
-
-...are exposed via /metrics and can be visualized in Grafana.
-
-Model Versioning with MLflow
-Model inference relies on the best-performing model tracked via MLflow. Use mlflow.pyfunc.load_model() to load from:
-
-bash
-Copy
-Edit
-models:/GestureClassifier/Production
-
-
 
 Author
 Eng. Khalid Ahmed Mohamed
