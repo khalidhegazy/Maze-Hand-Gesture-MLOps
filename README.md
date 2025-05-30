@@ -58,7 +58,50 @@ Used to monitor model latency, API throughput, and other metrics.
 
 
 
+## Monitoring Metrics
+This API backend integrates Prometheus for real-time monitoring of various components using prometheus_fastapi_instrumentator. Below are the three selected metrics, categorized and explained:
 
+1. Model-Related Metric
+Metric: model_predictions_total
+
+Reasoning:
+This helps to Tracks the total number of predictions made by the ML model and monitor model usage frequency. A spike might indicate high load or production use, while a drop may suggest system or model failure. It’s also useful for performance benchmarking over time.
+
+
+
+2. Data-Related Metric
+Metric: predicted_gesture_count
+
+
+Reasoning:
+ThisTracks the distribution of predicted gesture classes and provides insight into model output balance. If one gesture is predicted disproportionately, it may reveal:
+Data imbalance
+
+Model overfitting
+
+Incorrect mapping
+
+
+
+
+3. Server-Related Metric
+Metric: Auto-collected via prometheus_fastapi_instrumentator
+
+
+Reasoning:
+This helps Measures API latency and total number of requests to each endpoint and assess backend responsiveness and detect bottlenecks or outages. Sudden increases in latency or errors signal performance degradation.
+
+python
+Copy
+Edit
+Instrumentator().instrument(app).expose(app)
+Let me know if you'd like:
+
+A Grafana dashboard template for visualizing these metrics
+
+A Prometheus config sample for scraping this API
+
+Assistance with visual badges or deployment YAMLs
 Unit Tests — Model and API Testing
 Ensure robustness of endpoints and logic with automated testing.
 
