@@ -1,160 +1,149 @@
- Maze Hand Gesture Control API
-A machine learning-based FastAPI application that predicts navigation actions (up, down, left, right) from hand landmarks for controlling a maze game. The model training and experimentation are tracked using MLflow, and the system is fully containerized with Docker, monitored using Prometheus and Grafana, and deployable via GitHub Actions and Railway.
+# Backend - MLOps Maze Game using Hand Gestures
 
-Project Structure
-bash
+This repository contains the backend API and infrastructure that powers the gesture-controlled maze game. It serves ML model predictions based on hand landmarks, handles input/output to the frontend, and ensures seamless communication between components.
+
+## Hand Gesture to Maze Action Mapping
+
+This section defines how the predicted hand gestures are translated into maze navigation commands.
+
+| Predicted Gesture Label (from Model) | Original Hagrid Class Name | Maze Control Action |
+| :----------------------------------- | :------------------------- | :------------------ |
+| 16                                   | `like`                     | `up`                |
+| 2                                    | `dislike`                  | `down`              |
+| 3                                    | `four`                     | `right`             |
+| 14                                   | `three`                    | `left`              |
+
+*(Note: The API will return the string command, e.g., "up", "down","left" , "right" which the frontend will interpret.)*
+
+
+
+📌 Responsibilities
+Serving hand gesture classification model
+
+Mapping predicted gestures to maze control actions
+
+Real-time inference with Mediapipe landmarks
+
+Exposing API endpoints for frontend integration
+
+Logging requests, predictions, and system health
+
+Containerization and deployment setup
+
+Tech Stack & Tools
+FastAPI — REST API Framework
+Used to expose model inference endpoints.
+
+![API](https://github.com/user-attachments/assets/d86c49e6-6916-485d-9d4d-9576d66c2860)
+
+
+MLflow — Experiment Tracking
+Tracks training runs, hyperparameters, and model versions.
+
+![Mlflow](https://github.com/user-attachments/assets/0f73954f-9f4f-44b5-90a7-3e3f1ff95480)
+
+
+Docker — Containerization
+Package the backend into reproducible containers.
+
+![Docker_Desktop](https://github.com/user-attachments/assets/06084005-5ece-4039-b119-42119f820ce6)
+
+
+Grafana + Prometheus — Monitoring
+Used to monitor model latency, API throughput, and other metrics.
+
+![grafana2](https://github.com/user-attachments/assets/1ed100e1-8867-4ed2-ae2c-cc311e8dfcc9)
+
+
+Unit Tests — Model and API Testing
+Ensure robustness of endpoints and logic with automated testing.
+
+![API_Test](https://github.com/user-attachments/assets/b7d36399-47c7-41ad-b4f0-da463cf0884a)
+
+
+
+API Endpoints
+Method	Endpoint	Description
+POST	/predict	Returns maze action from hand data
+GET	/Root	Root endpoint with welcome message and API info
+GET	/metrics	Prometheus-compatible metrics
+
+Folder Structure
+graphql
 Copy
 Edit
-.
-├── MLflow.py                  # SVC training with MLflow tracking
-├── main.py                    # FastAPI application for inference
-├── unit_test.py               # Unit test for prediction endpoint
-├── hand_landmarks_data.csv    # Input dataset (not included here)
-├── Dockerfile                 # Docker image configuration
-├── docker-compose.yml         # Docker Compose for full stack (API + Monitoring)
-├── prometheus.yml             # Prometheus scrape configuration
-├── aws.yml                    # GitHub Actions CI/CD to Docker Hub & Railway
-├── models/                    # Directory for trained models and scalers
-├── requirements.txt           # Python dependencies
-└── README.md                  # 📄 You are here
- Features
-ML Model: Trained Support Vector Classifier (SVC) using best hyperparameters with 97% accuracy.
+maze/
+│
+├── app/                                
+│   ├── __init__.py               
+│   ├── main.py                         
+│   ├── Dockerfile                     
+│   ├── requirements.txt               
+├── models/                            
+│   └── best_svc_model.pkl              
+│   └── MMscale.pkl                     
+├── mlartifacts/                        
+├── mlruns/                             
+├── main.py                             
+├── MLflow.py                         
+├── hand_landmarks_data.csv             
+├── unit_test.py                      
+├── docker-compose.yml                  
+├── prometheus.yml                      
+├── aws.yml                            
+├── requirements.txt 
+├── README.md                          
 
-MLflow Tracking: Logs parameters, metrics, confusion matrix, and model artifacts.
 
-FastAPI Inference: Predicts gestures in real-time from 2D hand landmark input.
+Deployment
 
-Unit Testing: Simple test to validate the prediction endpoint.
 
-Dockerized: Fully containerized backend for development and deployment.
+![Dockerhup](https://github.com/user-attachments/assets/5bac244a-d564-4c77-8f7a-64144ebaa045)
 
-Monitoring: Prometheus + Grafana integrated to monitor API metrics.
+![Railway_Deploy](https://github.com/user-attachments/assets/d9f74f34-5f56-4b0f-934a-dd36fad8267b)
 
-CI/CD Pipeline: GitHub Actions workflow to build and deploy via Railway.
 
-Model Training (MLflow.py)
 
-Dataset: hand_landmarks_data.csv (landmark positions & gesture labels)
-
-Pipeline:
-
-Drop z-coordinates
-
-Encode labels with LabelEncoder
-
-Scale features using MinMaxScaler
-
-Train SVC(C=200, kernel='poly', gamma='scale')
-
-Track metrics/artifacts with MLflow
-
-Save:
-
-Model: models/best_svc_model.pkl
- Accuracy : 0.97
-Scaler: models/MMscale.pkl
-
-Label encoder: models/label_encoder.pkl
-
-⚙API Usage (main.py)
-Start the API
-bash
-Copy
-Edit
-docker-compose up --build
-# OR
-uvicorn main:app --reload
-Example Request
-http
-Copy
-Edit
-POST /predict
-Content-Type: application/json
-
-{
-  "landmarks": [
-    [x1, y1],
-    [x2, y2],
-    ...
-    [xN, yN]
-  ]
-}
-Response
-json
-Copy
-Edit
-{
-  "predicted_class_index": 16,
-  "action": "up"
-}
-Monitoring
-Prometheus: collects metrics from /metrics endpoint
-
-Grafana: visualize metrics like:
-
-Total predictions
-
-Predictions per class
-
-Access via:
-
-Prometheus: http://localhost:9090
-
-Grafana: http://localhost:3001
-
-Docker Instructions
-Build & Run
-bash
-Copy
-Edit
-docker-compose up --build
-Services
-fastapi → app @ localhost:8000
-
-prometheus → metrics @ localhost:9090
-
-grafana → dashboards @ localhost:3001
-
-cadvisor → container monitoring @ localhost:8080
-
-☁️ CI/CD Pipeline (GitHub Actions)
-Workflow: aws.yml
-
-Trigger: Push/PR to main
-
-Steps:
-
-Install dependencies
-
-Build & push Docker image to Docker Hub
-
-(Optionally) deploy to Railway using Railway CLI
-
-Set required secrets in your GitHub repository:
-
-DOCKERHUB_USERNAME
-
-DOCKERHUB_TOKEN
-
-RAILWAY_TOKEN
-
-Unit Test
-Run test:
+Deployment Instructions
+Build Docker Image
 
 bash
 Copy
 Edit
-python -m pytest unit_test.py
-Tests include:
-
-Valid landmark input returns 200 OK
-
-Output includes class index and action label
-
-Requirements
-Install dependencies with:
+docker build -t maze-backend .
+Run Container
 
 bash
 Copy
 Edit
-pip install -r requirements.txt
+docker run -p 8000:8000 maze-backend
+Access API
+
+Swagger docs: http://localhost:8000/docs
+
+Health check: http://localhost:8000/health
+
+Monitoring (Grafana + Prometheus)
+Metrics such as:
+
+Request count
+
+Latency per endpoint
+
+Model inference time
+
+...are exposed via /metrics and can be visualized in Grafana.
+
+Model Versioning with MLflow
+Model inference relies on the best-performing model tracked via MLflow. Use mlflow.pyfunc.load_model() to load from:
+
+bash
+Copy
+Edit
+models:/GestureClassifier/Production
+
+
+Author
+Eng. Khalid Ahmed Mohamed
+
+
