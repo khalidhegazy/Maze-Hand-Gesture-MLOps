@@ -17,7 +17,8 @@ This section defines how the predicted hand gestures are translated into maze na
 
 
 
-📌 Responsibilities
+Responsibilities
+
 Serving hand gesture classification model
 Mapping predicted gestures to maze control actions
 Real-time inference with Mediapipe landmarks
