@@ -38,7 +38,9 @@ Used to expose model inference endpoints.
 MLflow — Experiment Tracking
 Tracks training runs, hyperparameters, and model versions.
 
-![Mlflow](https://github.com/user-attachments/assets/0f73954f-9f4f-44b5-90a7-3e3f1ff95480)
+
+
+![Mlflow](https://github.com/user-attachments/assets/9387636c-e1bc-4be4-8316-cddb0b3ee861)
 
 
 
@@ -47,7 +49,8 @@ Docker — Containerization
 Package the backend into reproducible containers.
 
 
-![Docker_Desktop](https://github.com/user-attachments/assets/06084005-5ece-4039-b119-42119f820ce6)
+
+![Docker_Desktop](https://github.com/user-attachments/assets/bcc01d94-c3cb-43b1-9fbb-bd2234fbc6e2)
 
 
 
@@ -56,7 +59,8 @@ Grafana + Prometheus — Monitoring
 Used to monitor model latency, API throughput, and other metrics.
 
 
-![grafana2](https://github.com/user-attachments/assets/1ed100e1-8867-4ed2-ae2c-cc311e8dfcc9)
+
+![grafana2](https://github.com/user-attachments/assets/3fffca7a-04aa-47f8-b124-34766ad63324)
 
 
 
@@ -98,8 +102,9 @@ Unit Tests — Model and API Testing
 Ensure robustness of endpoints and logic with automated testing.
 
 
-![API_Test](https://github.com/user-attachments/assets/b7d36399-47c7-41ad-b4f0-da463cf0884a)
 
+
+![API_Test](https://github.com/user-attachments/assets/383fe3d5-5ffa-4b6e-a0dc-b7160ba6983b)
 
 
 
@@ -113,9 +118,7 @@ GET	/metrics	Prometheus-compatible metrics
 
 
 Folder Structure
-graphql
-Copy
-Edit
+
 maze/
 │
 ├── app/                                
@@ -140,14 +143,16 @@ maze/
 
 
 Deployment
+Dockerhup
+
+![Dockerhup](https://github.com/user-attachments/assets/eed170e5-aacd-4e6b-95dd-1409272752e0)
 
 
 
-![Dockerhup](https://github.com/user-attachments/assets/5bac244a-d564-4c77-8f7a-64144ebaa045)
 
-![Railway_Deploy](https://github.com/user-attachments/assets/d9f74f34-5f56-4b0f-934a-dd36fad8267b)
+Railway_Deploy
 
-
+![Railway_Deploy](https://github.com/user-attachments/assets/7cd1fd9b-abb9-480b-a72a-cd776497eebf)
 
 
 
