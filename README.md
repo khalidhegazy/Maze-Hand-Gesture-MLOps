@@ -29,7 +29,9 @@ FastAPI — REST API Framework
 Used to expose model inference endpoints.
 
 
-![API](https://github.com/user-attachments/assets/d86c49e6-6916-485d-9d4d-9576d66c2860)
+
+![API](https://github.com/user-attachments/assets/ec424a35-364e-48ce-8a96-c2cce3e74446)
+
 
 
 
