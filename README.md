@@ -91,17 +91,7 @@ Metric: Auto-collected via prometheus_fastapi_instrumentator
 Reasoning:
 This helps Measures API latency and total number of requests to each endpoint and assess backend responsiveness and detect bottlenecks or outages. Sudden increases in latency or errors signal performance degradation.
 
-python
-Copy
-Edit
-Instrumentator().instrument(app).expose(app)
-Let me know if you'd like:
 
-A Grafana dashboard template for visualizing these metrics
-
-A Prometheus config sample for scraping this API
-
-Assistance with visual badges or deployment YAMLs
 Unit Tests — Model and API Testing
 Ensure robustness of endpoints and logic with automated testing.
 
